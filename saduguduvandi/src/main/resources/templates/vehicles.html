@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicles - Sadugudu Vandi</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="brand"><a th:href="@{/}">SADUGUDU <span>VANDI</span></a></div>
+    <button class="nav-toggle" id="navToggle">&#9776;</button>
+    <div class="nav-links" id="navLinks">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/vehicles}">Vehicles</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Login</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/register}">Register</a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/my-bookings}">My Bookings</a>
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-link">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<div class="section-heading">
+    <h2>Our Vehicles</h2>
+    <p>Find the perfect ride for your journey</p>
+</div>
+
+<form class="filter-bar" th:action="@{/vehicles}" method="get">
+    <input type="text" name="search" placeholder="Search by vehicle name" th:value="${search}">
+    <select name="category">
+        <option value="ALL" th:selected="${selectedCategory == 'ALL'}">All Categories</option>
+        <option value="BIKE" th:selected="${selectedCategory == 'BIKE'}">Bike</option>
+        <option value="CAR" th:selected="${selectedCategory == 'CAR'}">Car</option>
+        <option value="VAN" th:selected="${selectedCategory == 'VAN'}">Van</option>
+    </select>
+    <button type="submit" class="btn">Search</button>
+</form>
+
+<div class="vehicle-grid" th:if="${not #lists.isEmpty(vehicles)}">
+    <div class="vehicle-card" th:each="vehicle : ${vehicles}">
+        <img th:src="${vehicle.imageUrl}" th:alt="${vehicle.name}">
+        <div class="body">
+            <span class="badge" th:text="${vehicle.category}">CATEGORY</span>
+            <h3 th:text="${vehicle.name}">Vehicle Name</h3>
+            <div class="price">
+                ₹<span th:text="${#numbers.formatDecimal(vehicle.pricePerDay, 1, 0)}">0</span> <span>/ day</span>
+            </div>
+            <div class="card-actions">
+                <a class="btn-outline" th:href="@{/vehicles/{id}(id=${vehicle.id})}">View Details</a>
+                <a class="btn" th:href="@{/booking/{id}(id=${vehicle.id})}">Book Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="empty-state" th:if="${#lists.isEmpty(vehicles)}">
+    <p>No vehicles found matching your search.</p>
+</div>
+
+<footer>
+    &copy; 2026 Sadugudu Vandi. Built as a student project.
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

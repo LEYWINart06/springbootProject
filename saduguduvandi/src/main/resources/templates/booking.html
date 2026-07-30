@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Vehicle - Sadugudu Vandi</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="brand"><a th:href="@{/}">SADUGUDU <span>VANDI</span></a></div>
+    <button class="nav-toggle" id="navToggle">&#9776;</button>
+    <div class="nav-links" id="navLinks">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/vehicles}">Vehicles</a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/my-bookings}">My Bookings</a>
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-link">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<div class="section-heading">
+    <h2>Confirm Your Booking</h2>
+</div>
+
+<div class="alert alert-error" style="max-width:900px;margin:0 auto;" th:if="${error != null}" th:text="${error}"></div>
+
+<div class="booking-wrap">
+    <div class="summary-card">
+        <img th:src="${vehicle.imageUrl}" th:alt="${vehicle.name}">
+        <h3 th:text="${vehicle.name}">Vehicle Name</h3>
+        <div class="summary-row">
+            <span>Category</span>
+            <span class="value" th:text="${vehicle.category}">CAR</span>
+        </div>
+        <div class="summary-row">
+            <span>Price per day</span>
+            <span class="value">₹<span th:text="${#numbers.formatDecimal(vehicle.pricePerDay, 1, 0)}">0</span></span>
+        </div>
+        <div class="summary-row">
+            <span>Total days</span>
+            <span class="value" id="totalDaysValue">0</span>
+        </div>
+        <div class="summary-total">
+            <span>Total Price</span>
+            <span class="value" id="totalPriceValue" th:attr="data-price=${vehicle.pricePerDay}">₹0.00</span>
+        </div>
+    </div>
+
+    <div class="booking-form">
+        <form th:action="@{/booking}" method="post">
+            <input type="hidden" name="vehicleId" th:value="${vehicle.id}">
+            <div class="form-group">
+                <label for="pickupDate">Pickup Date</label>
+                <input type="date" id="pickupDate" name="pickupDate" th:min="${today}" required>
+            </div>
+            <div class="form-group">
+                <label for="returnDate">Return Date</label>
+                <input type="date" id="returnDate" name="returnDate" th:min="${today}" required>
+            </div>
+            <button type="submit" class="btn btn-block">Confirm Booking</button>
+        </form>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 Sadugudu Vandi. Built as a student project.
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

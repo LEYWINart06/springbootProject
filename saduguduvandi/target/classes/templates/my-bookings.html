@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - Sadugudu Vandi</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="brand"><a th:href="@{/}">SADUGUDU <span>VANDI</span></a></div>
+    <button class="nav-toggle" id="navToggle">&#9776;</button>
+    <div class="nav-links" id="navLinks">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/vehicles}">Vehicles</a>
+        <a th:href="@{/my-bookings}">My Bookings</a>
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-link">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<div class="section-heading">
+    <h2>My Bookings</h2>
+    <p>Track and manage your rides</p>
+</div>
+
+<div class="alert alert-error" style="max-width:900px;margin:0 auto;" th:if="${error != null}" th:text="${error}"></div>
+
+<div class="bookings-list" th:if="${not #lists.isEmpty(bookings)}">
+    <div class="booking-item" th:each="booking : ${bookings}">
+        <div class="info">
+            <h4 th:text="${booking.vehicle.name}">Vehicle Name</h4>
+            <p>Pickup: <span th:text="${booking.pickupDate}">2026-01-01</span></p>
+            <p>Return: <span th:text="${booking.returnDate}">2026-01-02</span></p>
+            <p>Total: ₹<span th:text="${#numbers.formatDecimal(booking.totalPrice, 1, 2)}">0</span></p>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:12px;">
+            <span class="status"
+                  th:classappend="${booking.status.name() == 'CONFIRMED'} ? 'status-confirmed' : 'status-cancelled'"
+                  th:text="${booking.status}">CONFIRMED</span>
+            <form th:if="${booking.status.name() == 'CONFIRMED'}"
+                  th:action="@{/my-bookings/{id}/cancel(id=${booking.id})}" method="post">
+                <button type="submit" class="btn-danger" style="padding:8px 18px; border-radius:999px; cursor:pointer;">
+                    Cancel Booking
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="empty-state" th:if="${#lists.isEmpty(bookings)}">
+    <p>You haven't booked any vehicles yet.</p>
+    <a class="btn" th:href="@{/vehicles}" style="margin-top:14px; display:inline-block;">Browse Vehicles</a>
+</div>
+
+<footer>
+    &copy; 2026 Sadugudu Vandi. Built as a student project.
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

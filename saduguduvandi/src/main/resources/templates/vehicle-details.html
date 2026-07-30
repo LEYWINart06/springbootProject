@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${vehicle.name} + ' - Sadugudu Vandi'">Vehicle Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="brand"><a th:href="@{/}">SADUGUDU <span>VANDI</span></a></div>
+    <button class="nav-toggle" id="navToggle">&#9776;</button>
+    <div class="nav-links" id="navLinks">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/vehicles}">Vehicles</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Login</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/register}">Register</a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/my-bookings}">My Bookings</a>
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-link">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<div class="details-wrap">
+    <img th:src="${vehicle.imageUrl}" th:alt="${vehicle.name}">
+    <div class="details-info">
+        <span class="badge" th:text="${vehicle.category}">CATEGORY</span>
+        <h1 th:text="${vehicle.name}">Vehicle Name</h1>
+        <div class="price">
+            ₹<span th:text="${#numbers.formatDecimal(vehicle.pricePerDay, 1, 0)}">0</span> <span style="font-size:14px;">/ day</span>
+        </div>
+        <a class="btn btn-block" th:href="@{/booking/{id}(id=${vehicle.id})}">Book Now</a>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 Sadugudu Vandi. Built as a student project.
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

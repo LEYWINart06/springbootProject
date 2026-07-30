@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sadugudu Vandi - Your Journey. Your Ride.</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="brand">SADUGUDU <span>VANDI</span></div>
+    <button class="nav-toggle" id="navToggle">&#9776;</button>
+    <div class="nav-links" id="navLinks">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/vehicles}">Vehicles</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Login</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/register}">Register</a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/my-bookings}">My Bookings</a>
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-link">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<section class="hero">
+    <h1>Your Journey. Your Ride.</h1>
+    <p>Choose your vehicle and start your journey with Sadugudu Vandi.</p>
+    <a th:href="@{/vehicles}" class="btn">Explore Vehicles</a>
+</section>
+
+<div class="section-heading">
+    <h2>Browse by Category</h2>
+    <p>Pick the ride that suits your trip</p>
+</div>
+
+<div class="categories">
+    <a class="category-card" th:href="@{/vehicles(category='BIKE')}">
+        <div class="icon">🏍️</div>
+        <h3>Bike</h3>
+    </a>
+    <a class="category-card" th:href="@{/vehicles(category='CAR')}">
+        <div class="icon">🚗</div>
+        <h3>Car</h3>
+    </a>
+    <a class="category-card" th:href="@{/vehicles(category='VAN')}">
+        <div class="icon">🚐</div>
+        <h3>Van</h3>
+    </a>
+</div>
+
+<footer>
+    &copy; 2026 Sadugudu Vandi. Built as a student project.
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
